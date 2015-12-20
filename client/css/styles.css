@@ -1,0 +1,96 @@
+body {
+    /*margin-top: 20px;*/
+}
+#ludo-tooltip {
+    z-index: 9999;
+    background-color: black;
+    padding: 5px 10px;
+    color: white;
+    border-radius: 5px;
+    position: fixed;
+    display: none;
+}
+#ludo-canvas-wrap {
+    position: relative;
+    margin: 0 auto;
+    /*display: inline-block;*/
+    background-size: 70%;
+    width: 800px;
+    height: 800px;
+}
+#ludo-canvas-wrap canvas {
+    /*border: 2px solid red;*/
+}
+#ludo-controls {
+    padding: 10px;
+    margin: 0 auto;
+    /*display: inline-block;*/
+    border: 1px solid black;
+    width: 320px;
+    height: 602px;
+    /*margin-left: 10px;*/
+    vertical-align: top;
+}
+#ludo-controls label {
+    font-weight: normal;
+}
+#ludo-controls input {
+    padding-left: 5px;
+}
+#ludo-controls input[type="checkbox"] {
+    vertical-align: text-bottom;
+}
+#active-games {
+    height: 180px;
+    overflow: auto;
+    border: 1px solid gray;
+    cursor: default;
+}
+#logs-div {
+    height: 250px;
+    overflow: auto;
+    border: 1px solid gray;
+    cursor: default;
+    margin-bottom: 20px;
+}
+.logs-line {
+    padding: 3px 8px;
+}
+.logs-line:nth-of-type(even) {
+    background-color: #efeff0;
+}
+/*#logs-div div:nth-of-type(odd) {*/
+/*background-color: #e8e8e9;*/
+/*}*/
+/*#active-games div:last-of-type{*/
+/*margin-bottom: -1px;*/
+/*}*/
+/*.active-game {*/
+/*padding: 5px 0 5px 10px;*/
+/*border-bottom: 1px solid black;*/
+/*}*/
+/*.active-game:not(.selected):hover {*/
+/*background-color: #f3f3f4;*/
+/*}*/
+#active-games .active td {
+    background-color: #dcdcdd !important;
+}
+/*#create-div, #game-nav {*/
+    /*display: none;*/
+/*}*/
+#ludo-controls .btn-default:focus {
+    outline: 0 !important;
+}
+.tabs {
+    cursor: default;
+}
+.notValid {
+    border: 2px solid red;
+}
+/*#players-list*/
+/*#lobby-div {*/
+/*display: none;*/
+/*}*/
+/*#game-nav {*/
+/*display: block;*/
+/*}*/
