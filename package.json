@@ -1,0 +1,11 @@
+{
+  "name": "ludo",
+  "version": "1.0.0",
+  "description": "Ludo game server",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.13.3",
+    "socket.io": "^1.4.3",
+    "sockpress": "^1.0.0"
+  }
+}
