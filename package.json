@@ -5,6 +5,7 @@
   "dependencies": {
     "body-parser": "^1.14.2",
     "express": "^4.13.3",
+    "request": "^2.69.0",
     "socket.io": "^1.4.3",
     "sockpress": "^1.0.0"
   }

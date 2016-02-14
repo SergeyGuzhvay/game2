@@ -3,7 +3,7 @@
  *
  * @api {post} /api/create_game          Create
  * @apiGroup Game
- * @apiParam {Number} gameId       Game ID
+ * @apiParam {Number} game_id      Game ID
  * @apiVersion 1.0.0
  *
  * @apiSuccess 200  Game was successfully created
@@ -28,10 +28,10 @@
  *
  * @api {post} /api/join_game          Join
  * @apiGroup Game
- * @apiParam {Number} gameId       Game ID
- * @apiParam {Number} userId       User ID
- * @apiParam {String} userName     User name
- * @apiParam {String} userAvatar   Path to user avatar
+ * @apiParam {Number} game_id       Game ID
+ * @apiParam {Number} user_id       User ID
+ * @apiParam {String} user_name     User name
+ * @apiParam {String} user_avatar   Path to user avatar
  * @apiVersion 1.0.0
  *
  * @apiSuccess {Number} seat  Player's seat ID in the game
@@ -43,7 +43,8 @@
  *     }
  *
  * @apiError 403 Game is full
- * @apiError 404 Game with this ID is not found
+ * @apiError 403 User with this ID already joined
+ * @apiError 404 Game with this ID doesn't exist
  *
  */
 
@@ -51,33 +52,34 @@
  *
  * @api {post} /api/start_game           Start
  * @apiGroup Game
- * @apiParam {Number} gameId       Game ID
+ * @apiParam {Number} game_id       Game ID
  * @apiVersion 1.0.0
  *
  * @apiSuccess 200  Game started successfully
  *
  * @apiError 403 Game is not ready
- * @apiError 404 Game with this ID is not found
+ * @apiError 403 Game already started
+ * @apiError 404 Game with this ID doesn't exist
  *
  */
 
 /**
  *
- * @api {post} /api/show_game           Show
+ * @api {get} /api/show_game/:game_id/:seat         Show
  * @apiGroup Game
- * @apiParam {Number} gameId       Game ID
+ * @apiParam {Number} game_id       Game ID
  * @apiParam {Number} seat       Player's seat ID in the game
  * @apiVersion 1.0.0
  *
- * @apiSuccess 200  GAME ITSELF (player need to be redirected here, when game is started)
+ * @apiSuccess 200  GAME ITSELF (players need to be redirected here, when game is started)
  *
  */
 
 /**
  *
- * @api {get} /api/game_info/:id     Get basic info
+ * @api {get} /api/game_info/:game_id     Get basic info
  * @apiGroup Game
- * @apiParam {Number} id       Game ID
+ * @apiParam {Number} game_id       Game ID
  * @apiVersion 1.0.0
  *
  * @apiSuccess {Number} players  Number of players in the game

@@ -17,7 +17,11 @@ window.addEventListener('load', function () {
         clubs: 'M 114.42 16.35 C 132.27 3.94 154.67 0.36 176.00 0.62 C 194.24 0.85 212.94 2.69 229.85 9.99 C 241.61 14.99 252.27 23.61 257.75 35.36 C 264.02 48.24 263.62 63.14 261.37 76.95 C 258.38 94.47 249.90 110.45 240.22 125.15 C 237.95 128.76 234.42 132.20 235.25 136.87 C 237.05 136.72 239.07 136.83 240.40 135.38 C 244.74 131.37 248.93 127.11 254.01 124.02 C 264.94 116.97 278.13 114.30 290.99 114.33 C 301.69 114.03 312.44 117.49 320.83 124.16 C 333.51 134.52 340.20 150.38 343.17 166.13 C 347.49 189.81 346.22 214.82 337.63 237.43 C 331.04 254.52 320.01 270.36 304.56 280.51 C 292.47 288.56 277.31 292.08 262.97 289.46 C 243.97 286.31 226.92 276.01 212.77 263.27 C 202.86 254.25 194.06 243.70 188.51 231.41 C 186.53 227.72 184.85 223.12 180.76 221.33 C 177.35 220.00 176.02 224.35 176.22 226.96 C 175.89 253.73 181.86 280.84 194.73 304.40 C 200.37 314.21 207.38 323.70 217.16 329.72 C 218.57 330.83 220.73 331.89 220.55 334.01 C 220.78 336.52 218.09 337.90 216.01 338.39 C 208.51 340.31 200.70 340.35 193.04 341.15 C 174.39 341.63 155.45 342.27 137.13 338.10 C 132.50 336.93 127.78 335.58 123.83 332.82 C 122.25 329.74 125.53 327.66 128.09 327.02 C 138.01 323.95 144.70 315.18 149.17 306.25 C 156.54 291.30 159.97 274.77 162.33 258.38 C 163.97 245.97 165.06 233.46 164.73 220.94 C 164.89 218.73 163.54 215.79 160.94 216.10 C 157.12 215.82 155.35 219.93 153.75 222.70 C 144.54 241.33 130.73 258.10 112.70 268.75 C 97.97 277.65 80.22 281.58 63.13 279.20 C 49.85 276.60 37.70 269.35 28.49 259.50 C 10.99 241.34 1.75 216.38 0.00 191.46 L 0.00 180.60 C 1.66 158.93 8.02 136.44 23.45 120.45 C 34.14 108.69 50.61 102.01 66.48 104.31 C 81.49 106.29 95.20 113.29 108.11 120.82 C 111.83 122.83 115.22 126.13 119.72 125.95 C 119.74 124.73 119.75 123.52 119.76 122.32 C 110.54 115.54 101.92 107.49 96.71 97.15 C 90.61 85.42 89.03 71.99 88.84 58.95 C 89.60 41.64 100.22 25.79 114.42 16.35 Z',
         arrow: 'M 0.01 0.01 C 4.41 1.08 7.75 4.46 11.92 6.11 C 16.27 8.48 21.30 9.37 25.45 12.09 C 22.51 13.53 19.35 14.58 16.04 14.32 C 29.03 28.56 41.73 43.06 54.65 57.37 C 58.92 61.41 62.57 66.05 66.57 70.36 C 76.92 82.54 87.80 94.26 98.34 106.28 C 101.34 110.13 106.83 109.71 111.22 109.90 C 118.16 117.66 125.23 125.30 131.99 133.22 C 126.69 135.78 120.87 132.84 116.48 129.82 C 118.94 134.03 122.00 141.18 117.76 144.99 C 110.86 137.59 104.20 129.97 97.47 122.41 C 97.55 118.13 98.47 113.10 95.76 109.41 C 82.62 94.51 69.06 79.97 55.77 65.19 C 41.82 48.84 27.03 33.22 12.96 16.97 C 12.63 20.30 12.08 24.15 9.01 26.13 C 7.70 16.94 4.20 8.24 0.01 0.01 Z',
     };
-
+    var sounds = {
+        turn: new Audio('/media/turn.mp3'),
+        dice: new Audio('/media/dice.mp3'),
+        token: new Audio('/media/token.mp3')
+    };
     var conf = {
         strokeWidth: canvas.width * 0.00375
     };
@@ -60,6 +64,11 @@ window.addEventListener('load', function () {
     fabric.Object.prototype.animatePosition = function (pos, extra) {
         console.time('animate');
         var obj = this;
+        if (obj.type === 'token') {
+            setTimeout(function () {
+                sounds.token.play();
+            }, 250);
+        }
         var animation = {
             left: (pos[0] - 0.5) * conf.gridSize + conf.strokeWidth / 2,
             top: (pos[1] - 0.5) * conf.gridSize + conf.strokeWidth / 2
@@ -80,7 +89,9 @@ window.addEventListener('load', function () {
                     obj._animated = false;
                     ludo.checkMultiTokens(obj.team);
                     //obj.bringToFront();
+                    //sounds.token.play();
                 }
+                console.timeEnd('animate');
             }
         });
         //obj.animate({
@@ -109,25 +120,42 @@ window.addEventListener('load', function () {
         dice: new fabric.Group(),
         timer: new fabric.Circle(),
         moveTarget: (function () {
-            var moveTarget = new fabric.Circle({
+            var rect = new fabric.Rect({
+                fill: '',
+                stroke: '',
+                strokeWidth: conf.strokeWidth / 3,
+                width: conf.cellSize,
+                height: conf.cellSize
+            });
+            var circle = new fabric.Circle({
                 radius: conf.cellSize * 0.4 - conf.strokeWidth * 0.8,
                 _savedRadius: conf.cellSize * 0.4 - conf.strokeWidth * 0.8,
                 fill: '',
                 stroke: 'black',
-                strokeWidth: conf.strokeWidth * 1.5,
-                evented: false,
+                strokeWidth: conf.strokeWidth * 1.5
+            });
+            var moveTarget = new fabric.Group([rect, circle], {
                 position: 0,
+                selectable: true,
+                hasControls: false,
+                lockMovementX: true,
+                lockMovementY: true,
+                hoverCursor: 'pointer',
+                hasBorders: false,
+                type: 'target',
                 isAnimated: false
             });
             moveTarget.runAnimation = function (self) {
-                self.set('radius', self._savedRadius);
-                self.animate({radius: conf.strokeWidth}, {
+                self.bringToFront();
+                var circle = self._objects[1];
+                circle.set('radius', circle._savedRadius);
+                circle.animate({radius: conf.strokeWidth}, {
                     duration: 700,
                     onChange: canvas.renderAll.bind(canvas),
                     onComplete: (function () {
                         if (this.isAnimated) {
                             this.set('radius', this._savedRadius);
-                            this.runAnimation(this);
+                            this.runAnimation(self);
                         }
                     }).bind(self)
                 });
@@ -499,13 +527,14 @@ window.addEventListener('load', function () {
             });
         },
         drawToken: function (team, pos) {
+            var teams = ['red', 'green', 'yellow', 'blue'];
             var color = desk.tokens[team].color;
             var circle = new fabric.Circle({
                 radius: conf.cellSize * 0.35 - conf.strokeWidth * 1,
                 fill: color,
                 stroke: color,
                 strokeWidth: conf.strokeWidth * 1,
-                selectable: true,
+                selectable: team === teams[ludo.seat - 1],
                 hasControls: false,
                 lockMovementX: true,
                 lockMovementY: true,
@@ -692,12 +721,11 @@ window.addEventListener('load', function () {
         select: function(obj) {
             if (!this.isTurn()) return;
             if (obj && obj._animated) return;
+            if (obj.position === 56) return;
             if (this.players[this.seat - 1].team !== obj.team) {
                 return;
             }
-            this.players[this.seat - 1].tokens.forEach(function (obj2) {
-                ludo.deselect(obj2);
-            });
+            this.deselectAll();
             if (this.dice.value) {
                 if (obj.position !== -1) {
                     var targetPosition = obj.position;
@@ -724,12 +752,21 @@ window.addEventListener('load', function () {
                 //strokeWidth: conf.strokeWidth
             });
         },
-        deselect: function (obj) {
-            if (!(obj && obj.type === 'token')) return;
-            canvas.remove(obj.moveTarget);
-            obj.moveTarget.isAnimated = false;
-            obj.set({
-                stroke: obj._color,
+        getSelected: function () {
+            var thisPlayer = this.players[this.seat - 1];
+            if (!thisPlayer) return;
+            for (var i = 0; i < 4; i++) {
+                var token = thisPlayer.tokens[i];
+                if (token.isSelected) return token;
+            }
+        },
+        deselectAll: function () {
+            var token = this.getSelected();
+            if (!(token && token.type === 'token')) return;
+            canvas.remove(token.moveTarget);
+            token.moveTarget.isAnimated = false;
+            token.set({
+                stroke: token._color,
                 isSelected: false
             });
         },
@@ -778,116 +815,93 @@ window.addEventListener('load', function () {
         });
         canvas.add(backgroundImg);
 
-        //new ludo.Player('John', 1);
-        //new ludo.Player('Mike', 2);
-        //new ludo.Player('Edward', 3);
-        //new ludo.Player('Tomas', 4);
-
-
-
-        //var moveTarget = new fabric.Circle({
-        //    radius: conf.cellSize * 0.4 - conf.strokeWidth * 0.8,
-        //    _savedRadius: conf.cellSize * 0.4 - conf.strokeWidth * 0.8,
-        //    fill: '',
-        //    stroke: '#CD0DCE',
-        //    strokeWidth: conf.strokeWidth * 0.8,
-        //    position: 0
-        //});
-        //moveTarget.setPosition([7, 15]);
-        //canvas.add(moveTarget);
-
-        //targetCircle.runAnimation();
-
         canvas.on({
             'mouse:down': function (e) {
                 var obj = e.target;
-                if (obj.type === 'dice') {
-                    if (ludo.isTurn() && ludo.dice.value === 0) {
-                        socket.emit('roll dice');
-                        ludo.players[ludo.turn].tokens.forEach(function (token) {
-                            ludo.deselect(token);
-                        });
-                    }
-                    return;
-                }
                 if (!ludo.isTurn()) return;
-                if (obj.type !== 'token') return;
-                if (obj.isSelected) {
-                    //canvas.remove(moveTarget);
-                    //moveTarget.isAnimated = false;
-                    //var activeObj = canvas.getActiveObject();
-                    socket.emit('move token', obj.id);
-                    ludo.deselect(obj);
-                }
-                else {
-                    ludo.select(obj);
+                switch (obj.type) {
+                    case 'dice':
+                        if (ludo.dice.value === 0) {
+                            socket.emit('roll dice');
+                            ludo.deselectAll();
+                        }
+                        break;
+                    case 'token':
+                        if (obj.isSelected)
+                            ludo.deselectAll();
+                        else
+                            ludo.select(obj);
+                        break;
+                    case 'target':
+                        var token = ludo.getSelected();
+                        socket.emit('move token', token.id);
+                        ludo.deselectAll();
                 }
                 canvas.renderAll();
-            },
-            //'mouse:move': function (e) {
-            //    console.log(1);
-            //},
-            'before:selection:cleared': function (e) {
-                var obj = e.target;
-                ludo.deselect(obj);
-            },
-            //'object:selected': function (e) {
-            //    //canvas.deactivateAll();
-            //    var obj = e.target;
-            //    ludo.select(obj);
-            //}
+            }
         });
         canvas.renderAll();
         console.timeEnd('load time');
 
         window.onkeydown = function(e) {
+            if (e.keyCode === 27) {
+                ludo.deselectAll();
+            }
             if (e.keyCode === 32) {
-                console.log(canvas._objects.length);
-                //console.log(ludo.players);
+                if (ludo.isTurn() && ludo.dice.value === 0) {
+                    socket.emit('roll dice');
+                    ludo.deselectAll();
+                }
+                if (conf.dev) {
+                    console.log(canvas._objects.length);
+                }
             }
         };
         socket.emit('get game data');
         socket.on('game data', function (data) {
+            ludo.seat = data.seat;
+            ludo.turn = data.turn;
             data.players.forEach(function (player) {
                 if (player) {
                     ludo.addPlayer(player);
                 }
             });
-            ludo.seat = data.seat;
-            ludo.turn = data.turn;
             ludo.dice = desk.drawDice(data.dice, data.turn);
+            if (ludo.dice.value === 0 && !ludo.isTurn()) {
+                canvas.remove(ludo.dice);
+            }
             ludo.timer = data.timer;
             ludo.updateTimer(data.turn, data.timeLeft);
             canvas.renderAll();
+            if (ludo.isTurn()) {
+                sounds.turn.play();
+            }
         });
         socket.on('next turn', function (turn) {
             ludo.turn = turn;
-            ludo.dice = desk.drawDice(0, turn);
+            canvas.remove(ludo.dice);
+            if (ludo.isTurn()) {
+                sounds.turn.play();
+                ludo.dice = desk.drawDice(0, turn);
+            }
             ludo.updateTimer(turn);
-            ludo.deselect(canvas.getActiveObject());
+            ludo.deselectAll();
 
             canvas.renderAll();
         });
         socket.on('dice', function (data) {
-            console.log(data);
+            if (!ludo.isTurn()) {
+                ludo.dice = desk.drawDice(data.dice, data.turn);
+            }
+            sounds.dice.play();
             ludo.dice.roll(data.dice);
         });
         socket.on('token moved', function (data) {
-            //var team = ['red', 'green', 'yellow', 'blue'][data.seat - 1];
             var token = ludo.players[data.seat - 1].tokens[data.id];
-            //if (data.p === -1) {
-            //    token.position = -1;
-            //    token.animatePosition(desk.tokens[token.team].positions[data.id]);
-            //    return;
-            //}
             var i = 0;
             var step = 1;
             var steps = (token.position === -1 && data.dice === 6) ? 1 : data.dice;
             var interval = setInterval(function () {
-                //if (token.tokenNumber) {
-                //    canvas.remove(token.tokenNumber);
-                //    delete token.tokenNumber;
-                //}
                 token._animated = true;
                 ludo.checkMultiTokens(token.team);
                 i++;
@@ -916,4 +930,3 @@ window.addEventListener('load', function () {
     fabric.Image.fromURL(desk.dataURL, mainFunc);
 
 });
-

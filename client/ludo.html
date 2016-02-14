@@ -2,135 +2,15 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Rummi game</title>
+	<title>Ludo game</title>
 	<script type="text/javascript" src="/socket.io/socket.io.js"></script>
 	<script type="text/javascript" src="/js/fabric150.min.js"></script>
-	<!--<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.5.0/fabric.min.js"></script>-->
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-	        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-	<!--<script type="text/javascript" src="js/lobby-controller.js"></script>-->
 	<script type="text/javascript" src="/js/ludo.js"></script>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-	      integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-	<link rel="stylesheet" type="text/css" href="/css/styles.css" />
 </head>
 <body>
 	<div id="ludo-tooltip"></div>
-	<!--<div id="ludo-canvas-wrap">-->
-		<div>
-			<canvas id="ludo-canvas" width="800" height="800"></canvas>
-		</div>
-	<!--</div>-->
-	<!--<div id="ludo-controls" ng-hide="l.gameStarted">-->
-		<!--<div id="lobby-div" ng-hide="l.room">-->
-			<!--<p>-->
-				<!--<label for="name-input">Your name</label> <br>-->
-				<!--<input id="name-input" type="text" ng-model="l.form.username">-->
-			<!--</p>-->
-			<!--<br>-->
-			<!--<ul class="nav nav-tabs">-->
-				<!--<li class="tabs" ng-class="{active: l.isSelected('create')}">-->
-					<!--<a ng-click="l.selectTab('create')">Create</a>-->
-				<!--</li>-->
-				<!--<li class="tabs" ng-class="{active: l.isSelected('join')}">-->
-					<!--<a ng-click="l.selectTab('join')">Join</a>-->
-				<!--</li>-->
-			<!--</ul>-->
-			<!--<br>-->
-			<!--<div id="create-div" ng-show="l.isSelected('create')">-->
-				<!--<p>-->
-					<!--<label for="game-name-input">Game name</label> <br>-->
-					<!--<input id="game-name-input" type="text" ng-model="l.form.name"> <br>-->
-					<!--<input id="private-checkbox" type="checkbox" ng-model="l.form.isPrivate"> <label for="private-checkbox">private</label>-->
-				<!--</p>-->
-				<!--<p id="create-password-wrap" ng-show="l.form.isPrivate">-->
-					<!--<label for="create-password-input">Password</label> <br>-->
-					<!--<input id="create-password-input" type="text" ng-model="l.form.password"> <br>-->
-				<!--</p>-->
-				<!--<button ng-click="l.createRoom()">Create game</button>-->
-			<!--</div>-->
-			<!--<div id="join-div" ng-show="l.isSelected('join')">-->
-				<!--Active rooms-->
-				<!--<div id="active-games">-->
-					<!--<table class="table table-hover">-->
-						<!--<tbody id="games-list">-->
-							<!--<tr class="game-info"-->
-							    <!--ng-repeat="room in l.rooms"-->
-							    <!--ng-click="l.selectedRoom = room"-->
-							    <!--ng-dblclick="l.joinRoom(room.id)"-->
-							    <!--ng-class="{active: l.selectedRoom.id === room.id}">-->
-								<!--<td class="col-md-1">-->
-									<!--<span class="glyphicon glyphicon-lock" ng-show="room.password"></span>-->
-								<!--</td>-->
-								<!--<td class="col-md-2">-->
-									<!--{{room.players}}/4-->
-								<!--</td>-->
-								<!--<td class="col-md-9">-->
-									<!--{{room.name}}-->
-									<!--<span style="color: red" ng-show="room.gameStarted">[started]</span>-->
-								<!--</td>-->
-							<!--</tr>-->
-						<!--</tbody>-->
-					<!--</table>-->
-				<!--</div>-->
-				<!--<p id="join-password-wrap" ng-show="l.selectedRoom.password">-->
-					<!--<label for="join-password-input">Password</label> <br>-->
-					<!--<input id="join-password-input" type="text" ng-model="l.form.password"> <br>-->
-				<!--</p>-->
-				<!--<br>-->
-				<!--<button ng-click="l.joinRoom()">Join game</button>-->
-			<!--</div>-->
-		<!--</div>-->
-		<!--<div id="game-nav" ng-show="l.room">-->
-			<!--<h3 id="game-name">{{l.room.name}}</h3>-->
-
-			<!--<div class="col-md-8" style="padding: 0">-->
-				<!--<table id="players-list" class="table table-bordered">-->
-					<!--<tbody>-->
-					<!--<tr>-->
-						<!--<td class="col-md-1">1</td>-->
-						<!--<td id="player-name-0">{{l.room.players[0].name}}</td>-->
-					<!--</tr>-->
-					<!--<tr>-->
-						<!--<td class="col-md-1">2</td>-->
-						<!--<td id="player-name-1">{{l.room.players[1].name}}</td>-->
-					<!--</tr>-->
-					<!--<tr>-->
-						<!--<td class="col-md-1">3</td>-->
-						<!--<td id="player-name-2">{{l.room.players[2].name}}</td>-->
-					<!--</tr>-->
-					<!--<tr>-->
-						<!--<td class="col-md-1">4</td>-->
-						<!--<td id="player-name-3">{{l.room.players[3].name}}</td>-->
-					<!--</tr>-->
-					<!--</tbody>-->
-				<!--</table>-->
-			<!--</div>-->
-			<!--<div class="clearfix"></div>-->
-			<!--<h4>Logs</h4>-->
-			<!--<div id="logs-div">-->
-				<!--<div class="logs-line" ng-repeat="log in l.logs"><span ng-bind-html="log"></span></div>-->
-			<!--</div>-->
-
-			<!--<button ng-click="l.startGame()">Start game</button>-->
-			<!--&lt;!&ndash;<button ng-click="l.stopGame()">Stop game</button>&ndash;&gt;-->
-			<!--<button ng-click="l.leaveRoom()">Leave room</button>-->
-		<!--</div>-->
-	<!--</div>-->
-
-	<!--<div id="myModal" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">-->
-		<!--<div class="modal-dialog modal-sm">-->
-			<!--<div class="modal-content">-->
-				<!--<div class="modal-header">-->
-					<!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
-					<!--<h4 class="modal-title" id="myModalLabel">{{l.alert}}</h4>-->
-				<!--</div>-->
-				<!--<div class="modal-body">-->
-				<!--</div>-->
-			<!--</div>-->
-		<!--</div>-->
-	<!--</div>-->
+	<div>
+		<canvas id="ludo-canvas" width="900" height="900"></canvas>
+	</div>
 </body>
 </html>
